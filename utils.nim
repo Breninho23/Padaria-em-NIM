@@ -50,7 +50,7 @@ proc cadCliente*() =
   echo "Digite telefone do cli"
   cli.telefone=parseInt(readline(stdin))
 
-  insertCliente(cli)
+
 
   linha()
 
@@ -73,12 +73,8 @@ proc cadfuncionario*() =
   echo "Digite telefone do cli"
   fun.telefone=parseInt(readline(stdin))
 
-  echo "Este funcionario tera permissoes de administrador?\n [1] - SIM\n [2] - NAO"
-  y=readline(stdin)
-    if y=="1":
-      fun.adm=TRUE
-    else:
-      fun.adm=FALSE
+  echo "Este funcionario tera permissoes de administrador? [1] - SIM [2] - NAO"
+  fun.adm=readline(stdin)
   
       
   linha()
@@ -100,14 +96,14 @@ proc cadfornecedor*() =
   echo "Digite o email do cliente"
   forn.email=readline(stdin)
   
-  insertFornecedor(forn)
+  
   linha()
 
 proc cadProduto*() = 
   var pro = Produto()
   echo "Bem vindo ao Cadastro produto" 
   echo "Digite o nome"
-  pro.nome=readline(stdin)
+  pro.nome_produto=readline(stdin)
 
   echo "Digite o valor"
   pro.valor=parseFloat(readline(stdin))
@@ -121,7 +117,7 @@ proc cadProduto*() =
   echo "Digite a quantidade"
   pro.quant=parseInt(readline(stdin))
 
-  insertEstoque()
+  
   linha()
 
 proc insertCliente*(cli:Cliente) =
@@ -133,7 +129,13 @@ proc insertCliente*(cli:Cliente) =
 proc insertFornecedor*(fun:Fornecedor) =
     let db = open("localhost","rique","12345","padaria")
     db.exec(sql"""INSERT INTO fornecedores(nome, cnpj , telefone , email)
-                VALUES(?,?,?,?)""",fun.nome,fun.cnpj,fun.endereco,fun.telefone)
+                VALUES(?,?,?,?)""",fun.nome,fun.cnpj,fun.telefone,fun.email)
+    db.close()
+
+proc insertFuncionario*(fun:Funcionario) =
+    let db = open("localhost","rique","12345","padaria")
+    db.exec(sql"""INSERT INTO funcionario(nome, cpf , telefone , email , adm )
+                VALUES(?,?,?,?,?)""",fun.nome,fun.cpf,fun.telefone,fun.email,fun.adm)
     db.close()
 
 proc insertEstoque*(pro:Produto) =
@@ -144,8 +146,9 @@ proc insertEstoque*(pro:Produto) =
 
 proc listClientes*():string = 
     let db = open("localhost","rique","12345","padaria")
-    result=db.exec(sql"""SELECT * FROM clientes""")
+    result=db.exec(sql"""SELECT id,nome, FROM clientes""")
     db.close()
+    
 
 proc listEstoque*():string = 
     let db = open("localhost","rique","12345","padaria")
@@ -160,4 +163,9 @@ proc listFuncionario*():string =
 proc listFornecedores*():string = 
     let db = open("localhost","rique","12345","padaria")
     result=db.exec(sql"""SELECT * FROM fornecedores""")
+    db.close()
+
+proc vendas*():string = 
+    let db = open("localhost","rique","12345","padaria")
+    r=db.exec(sql"""SELECT id IN SQL estoque""")
     db.close()
