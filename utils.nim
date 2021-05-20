@@ -121,51 +121,51 @@ proc cadProduto*() =
   linha()
 
 proc insertCliente*(cli:Cliente) =
-    let db = open("localhost","rique","12345","padaria")
+    let db = open("localhost","breninho","padaria","padariadb")
     db.exec(sql"""INSERT INTO clientes(nome, cpf , telefone , email )
                 VALUES(?,?,?,?)""",cli.nome,cli.cpf,cli.telefone,cli.email)
     db.close()
 
 proc insertFornecedor*(fun:Fornecedor) =
-    let db = open("localhost","rique","12345","padaria")
+    let db = open("localhost","breninho","padaria","padariadb")
     db.exec(sql"""INSERT INTO fornecedores(nome, cnpj , telefone , email)
                 VALUES(?,?,?,?)""",fun.nome,fun.cnpj,fun.telefone,fun.email)
     db.close()
 
 proc insertFuncionario*(fun:Funcionario) =
-    let db = open("localhost","rique","12345","padaria")
+    let db = open("localhost","breninho","padaria","padariadb")
     db.exec(sql"""INSERT INTO funcionario(nome, cpf , telefone , email , adm )
                 VALUES(?,?,?,?,?)""",fun.nome,fun.cpf,fun.telefone,fun.email,fun.adm)
     db.close()
 
 proc insertEstoque*(pro:Produto) =
-    let db = open("localhost","rique","12345","padaria")
+    let db = open("localhost","breninho","padaria","padariadb")
     db.exec(sql"""INSERT INTO estoque(nome_produto, idFornecedores , valor , quant)
                 VALUES(?,?,?,?)""",pro.nome_produto,pro.idFornecedor,pro.valor,pro.quant)
     db.close()
 
 proc listClientes*():string = 
-    let db = open("localhost","rique","12345","padaria")
+   let db = open("localhost","breninho","padaria","padariadb")
     result=db.exec(sql"""SELECT id,nome, FROM clientes""")
     db.close()
     
 
 proc listEstoque*():string = 
-    let db = open("localhost","rique","12345","padaria")
+   let db = open("localhost","breninho","padaria","padariadb")
     result=db.exec(sql"""SELECT * FROM estoque""")
     db.close()
 
 proc listFuncionario*():string = 
-    let db = open("localhost","rique","12345","padaria")
+     let db = open("localhost","breninho","padaria","padariadb")
     result=db.exec(sql"""SELECT * FROM funcionarios""")
     db.close()
 
 proc listFornecedores*():string = 
-    let db = open("localhost","rique","12345","padaria")
+     let db = open("localhost","breninho","padaria","padariadb")
     result=db.exec(sql"""SELECT * FROM fornecedores""")
     db.close()
 
 proc vendas*():string = 
-    let db = open("localhost","rique","12345","padaria")
+ let db = open("localhost","breninho","padaria","padariadb")
     r=db.exec(sql"""SELECT id IN SQL estoque""")
     db.close()
