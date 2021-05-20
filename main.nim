@@ -17,7 +17,8 @@ while x != "7":
         of "3": cadProduto() insertEstoque(pro)
         of "4": cadfornecedor() insertFornecedor(forn)
         of "5":
-        of "6": echo "Obrigado por utilizar o nosso sistema"
+        of "6": subMenu()
+        of "7": echo "Obrigado por utilizar o nosso sistema"
         else: echo "Opção inválida!, tente novamente"
         
     var y = readline(stdin) 
