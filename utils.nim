@@ -16,20 +16,30 @@ proc linha() =
 
 proc menu*() =
   echo """
-  Padaria do portuga Padeiro
+  PADARIA FINA FARINHA
   [1] - CADASTRAR FUNCIONARIO
   [2] - CADASTRAR CLIENTE
   [3] - CADASTRAR PRODUTO
   [4] - CADASTRAR FORNECEDOR
-  [5] - REALIZAR UMA VENDA
-  [6] - LISTAR FUNCIONARIOS
-  [7] - LISTAR CLIENTES
-  [8] - LISTAR PRODUTOS
-  [9] - LISTAR FORNECEDORES
-  [10] - SAIR
+  [5] - VENDER
+  [6] - LISTAR
+  [7] - SAIR
 	"""
   linha()
 
+  linha()
+
+proc subMenu*()= 
+  linha()
+  echo """
+    ADMIN - SUBMENU
+    [1] - LISTAR FUNCIONARIOS
+    [2] - LISTAR CLIENTES
+    [3] - LISTAR PRODUTOS
+    [4] - LISTAR FORNECEDORES
+    [5] - LISTAR VENDAS    
+    [6] - VOLTAR AO MENU ANTERIOR"""
+      # submenu
   linha()
 
 proc cadCliente*() = 
