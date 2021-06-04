@@ -1,37 +1,40 @@
 import utils
-import objs
-import strutils
 import strformat
-var cli=Cliente
-var fun=Funcionario
-var forn=Fornecedor
-var pro=Produto
-var x = "1"
-while x != "7":
+import strutils
+import objs
+import sequtils
 
+var cli=new Cliente
+var fun=new Funcionario
+var forn=new Fornecedor
+var pro=new Produto
+var x = "9"
+    
+while x != "10":
     menu()
-    var x = readline(stdin)    
+    var x = readline(stdin)
+    
     case x
-        of "1": cadfuncionario() insertFuncionario(fun)
-        of "2": cadCliente() insertCliente(cli)
-        of "3": cadProduto() insertEstoque(pro)
-        of "4": cadfornecedor() insertFornecedor(forn)
-        of "5":
-        of "6": subMenu()
-        of "7": echo "Obrigado por utilizar o nosso sistema"
-        else: echo "Opção inválida!, tente novamente"
-        
-    var y = readline(stdin) 
-    case y
-      of "1": listClientes()
-      of "2": listEstoque()
-      of "3": listFuncionario()
-      of "4": listFornecedores()
-      of "5": vendas()
-      of "6": echo "<<<<<<<<"   
-      else: echo "Opção inválida" 
-    
-   
-        
-        
-    
+    of "1": cadfuncionario() 
+    of "2": cadCliente() 
+    of "3": cadProduto() 
+    of "4": cadfornecedor() 
+    of "5": 
+        for linha in lis5tEstoque():
+            echo fmt"Id do produto: {linha[0]}"
+            echo fmt"Nome do Produto: {linha[1]}"
+            echo fmt"Nome do fornecedor: {linha[2]}"
+    of "6": echo listFuncionario()
+    of "7": 
+        for linha in listClientes():
+            echo fmt"Nome do Cliente: {linha[1]}"
+            echo fmt"Nome do CPF: {linha[2]}"
+            echo fmt"Nome do EMAIL: {linha[3]}"
+            echo fmt"Nome do TELEFONE: {linha[4]}"
+            linha()
+    of "8": echo listEstoque()
+    of "9": echo listFornecedores()
+    of "10": 
+        echo "Obrigado por utilizar o nosso sistema"
+        break
+    else: echo "Opção inválida!, tente novamente"
