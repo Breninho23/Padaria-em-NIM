@@ -1,6 +1,6 @@
 import db_postgres
 
-let db=open("localhost","breninho","padaria","padariadb")
+let db=open("localhost","breninho","05082230","padaria")
 db.exec(sql"DROP TABLE IF EXISTS funcionarios")
 db.exec(sql"""CREATE TABLE funcionarios(
         id SERIAL PRIMARY KEY,
