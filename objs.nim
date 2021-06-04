@@ -2,7 +2,7 @@ import utils
 
 type
   Produto* = ref object of RootObj  
-    nome*:string
+    nome_produto*:string
     idfornecedor*:int
     valor*:float
     quant*:int
@@ -21,7 +21,7 @@ type
     endereco*:string
     email*:string
     telefone*:int
-    adm*:bool
+    adm*:string
   
   Cliente* = ref object of RootObj
     nome*:string
