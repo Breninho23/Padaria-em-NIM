@@ -11,37 +11,83 @@ var
   fun:seq[Funcionario]
   
 
-proc linha() =
+proc linha*() =
   echo "==========================================================================="
 
 proc menu*() =
   echo """
-  PADARIA FINA FARINHA
+  Padaria do portuga Padeiro
   [1] - CADASTRAR FUNCIONARIO
   [2] - CADASTRAR CLIENTE
   [3] - CADASTRAR PRODUTO
   [4] - CADASTRAR FORNECEDOR
-  [5] - VENDER
-  [6] - LISTAR
-  [7] - SAIR
+  [5] - REALIZAR UMA VENDA
+  [6] - LISTAR FUNCIONARIOS
+  [7] - LISTAR CLIENTES
+  [8] - LISTAR PRODUTOS
+  [9] - LISTAR FORNECEDORES
+  [10] - SAIR
 	"""
   linha()
 
   linha()
 
-proc subMenu*()= 
-  linha()
-  echo """
-    ADMIN - SUBMENU
-    [1] - LISTAR FUNCIONARIOS
-    [2] - LISTAR CLIENTES
-    [3] - LISTAR PRODUTOS
-    [4] - LISTAR FORNECEDORES
-    [5] - LISTAR VENDAS    
-    [6] - VOLTAR AO MENU ANTERIOR"""
-      # submenu
-  linha()
+proc insertCliente*(cli:Cliente) =
+    let db = open("localhost","breninho","05082230","padaria")
+    db.exec(sql"""INSERT INTO clientes(nome, cpf , telefone , email )
+                VALUES(?,?,?,?)""",cli.nome,cli.cpf,cli.telefone,cli.email)
+    db.close()
 
+proc insertFornecedor*(fun:Fornecedor) =
+    let db = open("localhost","breninho","05082230","padaria")
+    db.exec(sql"""INSERT INTO fornecedores(nome, cnpj , telefone , email)
+                VALUES(?,?,?,?)""",fun.nome,fun.cnpj,fun.telefone,fun.email)
+    db.close()
+
+proc insertFuncionario*(fun:Funcionario) =
+   let db = open("localhost","breninho","05082230","padaria")
+    db.exec(sql"""INSERT INTO funcionario(nome, cpf , telefone , email , adm )
+                VALUES(?,?,?,?,?)""",fun.nome,fun.cpf,fun.telefone,fun.email,fun.adm)
+    db.close()
+
+proc insertEstoque*(pro:Produto) =
+    let db = open("localhost","breninho","05082230","padaria")
+    db.exec(sql"""INSERT INTO estoque(nome_produto, idFornecedores , valor , quant)
+                VALUES(?,?,?,?)""",pro.nome_produto,pro.idFornecedor,pro.valor,pro.quant)
+    db.close()
+
+proc listClientes*():seq[Row] = 
+    let db = open("localhost","breninho","05082230","padaria")
+    result=db.getAllRows(sql"""SELECT * FROM clientes;""")
+    db.close()
+    
+
+proc listEstoque*():seq[Row] = 
+    let db = open("localhost","breninho","05082230","padaria")
+    result=db.getAllRows(sql"""SELECT * FROM estoque""")
+    db.close()
+
+proc listFuncionario*():seq[Row] = 
+    let db = open("localhost","breninho","05082230","padaria")
+    result=db.getAllRows(sql"""SELECT * FROM funcionarios""")
+    db.close()
+
+proc listFornecedores*():seq[Row] = 
+    let db = open("localhost","breninho","05082230","padaria")
+    result=db.getAllRows(sql"""SELECT * FROM fornecedores""")
+    db.close()
+
+proc vendas*():seq[Row] = 
+    let db = open("localhost","breninho","05082230","padaria")
+    result=db.getAllRows(sql"""SELECT * IN SQL estoque""")
+    db.close()
+
+# proc tproduto*():seq[Row]=
+#     let db = open("localhost","breninho","05082230","padaria")
+#     id_p=db.getRow(sql"""SELECT id IN SQL produto WHERE""")
+#     quantp=db.getRow(sql"""SELECT quant IN SQL produto""")
+#     valorp=db.getRow(sql"""SELECT valor IN SQL produto""")
+#     db.close()
 proc cadCliente*() = 
   var cli = Cliente()
   echo "Bem vindo ao Cadastro de Cliente" 
@@ -60,7 +106,7 @@ proc cadCliente*() =
   echo "Digite telefone do cli"
   cli.telefone=parseInt(readline(stdin))
 
-
+  insertCliente(cli)
 
   linha()
 
@@ -74,19 +120,16 @@ proc cadfuncionario*() =
   echo "Digite o cpf"
   fun.cpf=readline(stdin)
 
-  echo "Digite o endereço do cli"
-  fun.endereco=readline(stdin)
+  echo "Digite telefone do cli"
+  fun.telefone=parseInt(readline(stdin))
 
   echo "Digite o email do cli"
   fun.email=readline(stdin)
 
-  echo "Digite telefone do cli"
-  fun.telefone=parseInt(readline(stdin))
-
   echo "Este funcionario tera permissoes de administrador? [1] - SIM [2] - NAO"
   fun.adm=readline(stdin)
   
-      
+  insertFuncionario(fun) 
   linha()
 
   
@@ -97,16 +140,16 @@ proc cadfornecedor*() =
   echo "Digite o nome do fornecedor"
   forn.nome=readline(stdin)
 
-  echo "Digite o endereço do cliente"
+  echo "Digite o cnpj do fornecedor"
   forn.cnpj=readline(stdin)
 
-  echo "Digite o endereço do cliente"
+  echo "Digite o telefone do fornecedor"
   forn.telefone=parseInt(readline(stdin))
 
-  echo "Digite o email do cliente"
+  echo "Digite o email do fornecedor"
   forn.email=readline(stdin)
   
-  
+  insertFornecedor(forn)
   linha()
 
 proc cadProduto*() = 
@@ -115,10 +158,7 @@ proc cadProduto*() =
   echo "Digite o nome"
   pro.nome_produto=readline(stdin)
 
-  echo "Digite o valor"
-  pro.valor=parseFloat(readline(stdin))
-
-  echo "Digite o fornecedor"
+  echo "Digite o valor do ID fornecedor"
   pro.idfornecedor=parseInt(readline(stdin))
 
   echo "Digite o valor"
@@ -127,55 +167,5 @@ proc cadProduto*() =
   echo "Digite a quantidade"
   pro.quant=parseInt(readline(stdin))
 
-  
+  insertEstoque(pro)
   linha()
-
-proc insertCliente*(cli:Cliente) =
-    let db = open("localhost","breninho","padaria","padariadb")
-    db.exec(sql"""INSERT INTO clientes(nome, cpf , telefone , email )
-                VALUES(?,?,?,?)""",cli.nome,cli.cpf,cli.telefone,cli.email)
-    db.close()
-
-proc insertFornecedor*(fun:Fornecedor) =
-    let db = open("localhost","breninho","padaria","padariadb")
-    db.exec(sql"""INSERT INTO fornecedores(nome, cnpj , telefone , email)
-                VALUES(?,?,?,?)""",fun.nome,fun.cnpj,fun.telefone,fun.email)
-    db.close()
-
-proc insertFuncionario*(fun:Funcionario) =
-    let db = open("localhost","breninho","padaria","padariadb")
-    db.exec(sql"""INSERT INTO funcionario(nome, cpf , telefone , email , adm )
-                VALUES(?,?,?,?,?)""",fun.nome,fun.cpf,fun.telefone,fun.email,fun.adm)
-    db.close()
-
-proc insertEstoque*(pro:Produto) =
-    let db = open("localhost","breninho","padaria","padariadb")
-    db.exec(sql"""INSERT INTO estoque(nome_produto, idFornecedores , valor , quant)
-                VALUES(?,?,?,?)""",pro.nome_produto,pro.idFornecedor,pro.valor,pro.quant)
-    db.close()
-
-proc listClientes*():string = 
-   let db = open("localhost","breninho","padaria","padariadb")
-    result=db.exec(sql"""SELECT id,nome, FROM clientes""")
-    db.close()
-    
-
-proc listEstoque*():string = 
-   let db = open("localhost","breninho","padaria","padariadb")
-    result=db.exec(sql"""SELECT * FROM estoque""")
-    db.close()
-
-proc listFuncionario*():string = 
-     let db = open("localhost","breninho","padaria","padariadb")
-    result=db.exec(sql"""SELECT * FROM funcionarios""")
-    db.close()
-
-proc listFornecedores*():string = 
-     let db = open("localhost","breninho","padaria","padariadb")
-    result=db.exec(sql"""SELECT * FROM fornecedores""")
-    db.close()
-
-proc vendas*():string = 
- let db = open("localhost","breninho","padaria","padariadb")
-    r=db.exec(sql"""SELECT id IN SQL estoque""")
-    db.close()
