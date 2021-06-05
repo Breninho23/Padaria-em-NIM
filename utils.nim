@@ -16,7 +16,7 @@ proc linha*() =
 
 proc menu*() =
   echo """
-  Padaria do portuga Padeiro
+  Padaria Nicolau temos pão e paz
   [1] - CADASTRAR FUNCIONARIO
   [2] - CADASTRAR CLIENTE
   [3] - CADASTRAR PRODUTO
@@ -39,14 +39,14 @@ proc insertCliente*(cli:Cliente) =
     db.close()
 
 proc insertFornecedor*(fun:Fornecedor) =
-    let db = open("localhost","breninho","05082230","padaria")
+   let db = open("localhost","breninho","05082230","padaria")
     db.exec(sql"""INSERT INTO fornecedores(nome, cnpj , telefone , email)
                 VALUES(?,?,?,?)""",fun.nome,fun.cnpj,fun.telefone,fun.email)
     db.close()
 
 proc insertFuncionario*(fun:Funcionario) =
-   let db = open("localhost","breninho","05082230","padaria")
-    db.exec(sql"""INSERT INTO funcionario(nome, cpf , telefone , email , adm )
+    let db = open("localhost","breninho","05082230","padaria")
+    db.exec(sql"""INSERT INTO funcionarios(nome, cpf , telefone , email , adm )
                 VALUES(?,?,?,?,?)""",fun.nome,fun.cpf,fun.telefone,fun.email,fun.adm)
     db.close()
 
@@ -68,7 +68,7 @@ proc listEstoque*():seq[Row] =
     db.close()
 
 proc listFuncionario*():seq[Row] = 
-    let db = open("localhost","breninho","05082230","padaria")
+   let db = open("localhost","breninho","05082230","padaria")
     result=db.getAllRows(sql"""SELECT * FROM funcionarios""")
     db.close()
 
@@ -77,17 +77,44 @@ proc listFornecedores*():seq[Row] =
     result=db.getAllRows(sql"""SELECT * FROM fornecedores""")
     db.close()
 
-proc vendas*():seq[Row] = 
+proc update*(mud:int,tag:string) =
     let db = open("localhost","breninho","05082230","padaria")
-    result=db.getAllRows(sql"""SELECT * IN SQL estoque""")
+    db.exec(sql"""UPDATE estoque SET quant=? WHERE id=?
+                """,mud,tag)
     db.close()
 
-# proc tproduto*():seq[Row]=
-#     let db = open("localhost","breninho","05082230","padaria")
-#     id_p=db.getRow(sql"""SELECT id IN SQL produto WHERE""")
-#     quantp=db.getRow(sql"""SELECT quant IN SQL produto""")
-#     valorp=db.getRow(sql"""SELECT valor IN SQL produto""")
-#     db.close()
+
+
+proc tproduto*()=
+    var quanti=0
+    var tag=""
+    var idp=""
+    var varieble=0
+    var mud=0
+    var va=""
+    var valor=0
+    var qua=""
+    var quantidade=0
+    var vends=0
+    let db = open("localhost","breninho","05082230","padaria")
+    echo "Digite o id do produto"
+    tag=readline(stdin)
+    echo "Digite a quantidade"
+    quanti=parseInt(readline(stdin))
+    for linha in listEstoque():
+            if tag==linha[0]:
+              idp=linha[0]
+              va=linha[3]
+              valor=parseInt(va)
+              qua=linha[4]
+              quantidade=parseInt(qua)
+              mud=quantidade-quanti
+              vends=quanti*valor
+              update(mud,tag)
+              echo vends
+              echo mud
+    db.close()
+  
 proc cadCliente*() = 
   var cli = Cliente()
   echo "Bem vindo ao Cadastro de Cliente" 
